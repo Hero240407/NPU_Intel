@@ -49,4 +49,4 @@ Or double-click `npu_start.ps1` (requires PowerShell execution policy set to `Re
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
-The server starts at `http://127.0.0.1:8000` and exposes `POST /v1/completions`.
+The server starts at `http://127.0.0.1:8005` and exposes `POST /v1/completions`.
