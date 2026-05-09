@@ -1,0 +1,4 @@
+/.venv
+/npu_server_old.py
+/qwen2.5-coder-0.5b-npu-ov
+/qwen2.5-coder-1.5b-npu-ov
