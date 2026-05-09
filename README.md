@@ -2,11 +2,45 @@
 
 Run Qwen2.5-Coder models locally on an Intel NPU via OpenVINO GenAI, exposed as an OpenAI-compatible completions API.
 
-## Requirements
+## 📋 System Requirements
 
-- Intel NPU (e.g. Core Ultra series)
-- Python 3.10+
-- Windows
+### Minimum Requirements
+> Goal: Functional but may experience latency during heavy multi-tasking.
+
+| Component | Minimum |
+|-----------|---------|
+| **Processor** | Intel® Core™ Ultra (Series 1 "Meteor Lake" or newer) with integrated NPU |
+| **Memory (RAM)** | 16GB DDR5 — 8GB is technically enough for the model alone, but Windows 11 and VS Code will cause swapping and lag |
+| **NPU Capacity** | 10 TOPS (NPU 2.0 or 3.0) |
+| **Storage** | 5GB free space (for INT4 quantized weights and OpenVINO IR files) |
+| **Software** | OpenVINO™ GenAI 2025.4+, Windows 11 (23H2 or newer) with the latest Intel NPU Driver |
+
+### Recommended Requirements
+> Goal: Sub-50ms latency for autocomplete and smooth `@codebase` indexing.
+
+| Component | Recommended |
+|-----------|------------|
+| **Processor** | Intel® Core™ Ultra 5 245K or Ultra 7 265KF (Series 2 "Arrow Lake") |
+| **Memory (RAM)** | 32GB Dual-Channel DDR5 (2×16GB) — dual-channel is ~20% faster for LLM inference; single-channel is a major bottleneck as the NPU shares system bandwidth |
+| **NPU Capacity** | 40+ TOPS (NPU 4.0 "Lunar Lake" or "Arrow Lake" high-tier) |
+| **Storage** | NVMe SSD (for fast model loading into NPU memory) |
+
+## 📊 Model RAM Usage
+
+Running with INT4 Symmetric Quantization (required for NPU stability):
+
+| Model | Weight Size (Disk) | Active RAM Usage | Recommended Context Window |
+|-------|-------------------|-----------------|---------------------------|
+| Qwen 2.5 Coder 0.5B | ~350 MB | ~1.2 GB | Up to 8k tokens |
+| Qwen 2.5 Coder 1.5B | ~1.1 GB | ~3.5 GB | Up to 4k tokens |
+
+> **VS Code overhead:** VS Code + the Continue extension consume an additional ~2GB of RAM on top of the model.
+
+## 💡 Developer Notes
+
+- **Single-channel RAM:** If using single-channel RAM (common in some pre-builts or budget builds), use the **0.5B model only**. The 1.5B model will stutter because the NPU cannot fetch data from RAM fast enough.
+- **Symmetric quantization required:** Always export models with `--sym --ratio 1.0`. Asymmetric models frequently trigger "Duplicated Name" errors in the VPUX compiler (NPU compiler) and will silently fall back to CPU.
+- **Python 3.10+**
 
 ## Setup
 
