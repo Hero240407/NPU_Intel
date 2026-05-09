@@ -50,3 +50,35 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
 The server starts at `http://127.0.0.1:8005` and exposes `POST /v1/completions`.
+
+## Continue IDE Integration
+
+The NPU server is best used as an **autocomplete** model in [Continue](https://continue.dev). It runs very well for tab-completion and is responsive enough for real-time suggestions on Intel NPU hardware.
+
+> **Note:** It can technically be configured as an `embed` role, but this is **not recommended** — dedicated embedding models (e.g. `nomic-embed-text`) are significantly faster and produce better results for retrieval tasks.
+
+### config.yaml snippet
+
+Add one of the following entries to your `~/.continue/config.yaml` under `models:`, depending on which model you are running:
+
+**0.5B (recommended for autocomplete — faster, lower memory):**
+```yaml
+- name: "NPU Autocomplete"
+  provider: "openai"
+  model: "qwen2.5-coder:0.5b"
+  apiBase: "http://127.0.0.1:8005/v1"
+  roles:
+    - autocomplete
+```
+
+**1.5B (slightly higher quality, uses more NPU memory):**
+```yaml
+- name: "NPU Autocomplete"
+  provider: "openai"
+  model: "qwen2.5-coder:1.5b"
+  apiBase: "http://127.0.0.1:8005/v1"
+  roles:
+    - autocomplete
+```
+
+Make sure `npu_start.ps1` is running before starting your editor session.
