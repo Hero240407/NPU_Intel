@@ -2,7 +2,7 @@
 # NPU Model Launcher
 # Change MODEL_SIZE to "1.5b" or "0.5b" to select the model
 # ============================================================
-$MODEL_SIZE = "npu_0.5b"
+$MODEL_SIZE = "0.5b"
 # ============================================================
 
 if ([string]::IsNullOrWhiteSpace($MODEL_SIZE)) {
